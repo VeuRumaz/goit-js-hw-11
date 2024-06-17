@@ -6,9 +6,8 @@ export function renderGallery(images) {
   gallery.innerHTML = images
     .map(
       image => `
-    <a href="${image.largeImageURL}" class="gallery__link">
+    <a href="${image.largeImageURL}" class="gallery__link" data-caption="${image.tags}">
       <img src="${image.webformatURL}" alt="${image.tags}" class="gallery__image"/>
-      <div class="description">${image.tags}</div>
       <div class="info">
         <div class="info-item">
           <b>Likes</b>
@@ -30,6 +29,11 @@ export function renderGallery(images) {
     </a>`
     )
     .join('');
-  const lightbox = new SimpleLightbox('.gallery a');
+
+  const lightbox = new SimpleLightbox('.gallery a', {
+    captionsData: 'alt',
+    captionDelay: 250,
+    captionPosition: 'bottom',
+  });
   lightbox.refresh();
 }

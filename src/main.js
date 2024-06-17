@@ -2,6 +2,7 @@ import { fetchImages } from './js/pixabay-api.js';
 import { renderGallery } from './js/render-functions.js';
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
+import imageError from './img/error.svg';
 
 const form = document.querySelector('.search-form');
 const gallery = document.querySelector('.gallery');
@@ -9,6 +10,17 @@ const loader = document.querySelector('.loader');
 
 iziToast.settings({
   position: 'topRight',
+  resetOnHover: true,
+  transitionIn: 'fadeInDown',
+  transitionOut: 'fadeOutUp',
+  progressBar: true,
+  closeOnEscape: true,
+  theme: 'dark',
+  messageColor: 'white',
+  iconUrl: imageError,
+  backgroundColor: 'red',
+  titleColor: '#fff',
+  titleSize: '16px',
 });
 
 form.addEventListener('submit', event => {
@@ -22,28 +34,30 @@ form.addEventListener('submit', event => {
     return;
   }
   gallery.innerHTML = '';
-  loader.classList.remove('hidden'); // Показать индикатор загрузки
+  loader.classList.remove('hidden');
 
-  // Добавим задержку в 3 секунды перед выполнением запроса
-  setTimeout(async () => {
-    try {
-      const { hits } = await fetchImages(query);
-      if (hits.length === 0) {
-        iziToast.warning({
-          title: 'No results',
-          message:
-            'Sorry, there are no images matching your search query. Please try again!',
+  setTimeout(() => {
+    fetchImages(query)
+      .then(({ hits }) => {
+        if (hits.length === 0) {
+          iziToast.warning({
+            title: 'No results',
+            message:
+              'Sorry, there are no images matching your search query. Please try again!',
+          });
+        } else {
+          renderGallery(hits);
+        }
+      })
+      .catch(error => {
+        iziToast.error({
+          title: 'Error',
+          message: 'Failed to fetch images. Please try again later.',
         });
-      } else {
-        renderGallery(hits);
-      }
-    } catch (error) {
-      iziToast.error({
-        title: 'Error',
-        message: 'Failed to fetch images. Please try again later.',
+        console.error('Error fetching images:', error);
+      })
+      .finally(() => {
+        loader.classList.add('hidden');
       });
-    } finally {
-      loader.classList.add('hidden'); // Скрыть индикатор загрузки после завершения запроса
-    }
-  }, 3000); // Задержка в 3 секунды
+  }, 1000);
 });
