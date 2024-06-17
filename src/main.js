@@ -7,6 +7,10 @@ const form = document.querySelector('.search-form');
 const gallery = document.querySelector('.gallery');
 const loader = document.querySelector('.loader');
 
+iziToast.settings({
+  position: 'topRight',
+});
+
 form.addEventListener('submit', event => {
   event.preventDefault();
   const query = event.target.elements.searchQuery.value.trim();
