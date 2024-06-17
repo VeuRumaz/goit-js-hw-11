@@ -36,28 +36,26 @@ form.addEventListener('submit', event => {
   gallery.innerHTML = '';
   loader.classList.remove('hidden');
 
-  setTimeout(() => {
-    fetchImages(query)
-      .then(({ hits }) => {
-        if (hits.length === 0) {
-          iziToast.warning({
-            title: 'No results',
-            message:
-              'Sorry, there are no images matching your search query. Please try again!',
-          });
-        } else {
-          renderGallery(hits);
-        }
-      })
-      .catch(error => {
-        iziToast.error({
-          title: 'Error',
-          message: 'Failed to fetch images. Please try again later.',
+  fetchImages(query)
+    .then(({ hits }) => {
+      if (hits.length === 0) {
+        iziToast.warning({
+          title: 'No results',
+          message:
+            'Sorry, there are no images matching your search query. Please try again!',
         });
-        console.error('Error fetching images:', error);
-      })
-      .finally(() => {
-        loader.classList.add('hidden');
+      } else {
+        renderGallery(hits);
+      }
+    })
+    .catch(error => {
+      iziToast.error({
+        title: 'Error',
+        message: 'Failed to fetch images. Please try again later.',
       });
-  }, 1000);
+      console.error('Error fetching images:', error);
+    })
+    .finally(() => {
+      loader.classList.add('hidden');
+    });
 });

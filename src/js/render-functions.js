@@ -6,7 +6,7 @@ export function renderGallery(images) {
   gallery.innerHTML = images
     .map(
       image => `
-    <a href="${image.largeImageURL}" class="gallery__link" data-caption="${image.tags}">
+    <a href="${image.largeImageURL}" class="gallery__link">
       <img src="${image.webformatURL}" alt="${image.tags}" class="gallery__image"/>
       <div class="info">
         <div class="info-item">
@@ -34,6 +34,7 @@ export function renderGallery(images) {
     captionsData: 'alt',
     captionDelay: 250,
     captionPosition: 'bottom',
+    captionClass: 'sl-caption pos-bottom',
   });
   lightbox.refresh();
 }
